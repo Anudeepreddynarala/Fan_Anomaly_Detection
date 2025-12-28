@@ -3,7 +3,7 @@
 [![ESP-IDF](https://img.shields.io/badge/ESP--IDF-v5.5-blue.svg)](https://github.com/espressif/esp-idf)
 [![TensorFlow Lite](https://img.shields.io/badge/TensorFlow%20Lite-Micro-orange.svg)](https://www.tensorflow.org/lite/microcontrollers)
 [![Edge Impulse](https://img.shields.io/badge/Edge%20Impulse-Enabled-green.svg)](https://www.edgeimpulse.com/)
-[![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+
 
 ## 🎯 Project Overview
 
