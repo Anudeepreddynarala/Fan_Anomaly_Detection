@@ -12,10 +12,10 @@ A **production-ready industrial IoT system** that performs real-time anomaly det
 ### Key Technical Achievements
 
 - ✅ **Edge ML Deployment**: TensorFlow Lite Micro with INT8 quantization running on resource-constrained hardware
-- ✅ **Real-Time Processing**: 10-13 inferences/second with <80ms latency
+- ✅ **Real-Time Processing**: 6.2 inferences/second with 162ms total latency
 - ✅ **Production Code Quality**: Comprehensive error handling, performance monitoring, and modular architecture
 - ✅ **Hardware Integration**: Multi-peripheral system (I2S microphone, I2C display, dual-core processing)
-- ✅ **Optimized Performance**: CMSIS-NN acceleration, efficient memory management (~85KB RAM usage)
+- ✅ **Optimized Performance**: Efficient memory management (~85KB RAM usage)
 
 ---
 
@@ -31,7 +31,7 @@ A **production-ready industrial IoT system** that performs real-time anomaly det
 | **Model Type** | 2D CNN (Convolutional Neural Network) |
 | **Input Features** | 13×32 MFCC (Mel-Frequency Cepstral Coefficients) |
 | **Model Size** | 35 KB (quantized INT8) |
-| **Inference Time** | ~40-80ms (measured, not estimated) |
+| **Inference Time** | 55.1ms (measured on hardware) |
 | **RAM Usage** | 85 KB (TFLite arena: 63KB, buffers: 22KB) |
 | **Flash Usage** | 342 KB application + 800 KB framework = 1.14 MB total |
 
@@ -97,24 +97,31 @@ Softmax (2 classes: Normal/Anomaly)
 
 ### 4. **Optimization**
 - **Quantization**: INT8 post-training quantization (reduced from 140KB to 35KB)
-- **Acceleration**: CMSIS-NN optimized kernels for ARM-compatible operations
+- **Optimization**: Custom ESP-IDF porting layer for efficient execution on Xtensa architecture
 - **Training Accuracy**: ~87% on validation set
+- **Inference Consistency**: ±0.1ms variance (extremely stable performance)
 
 ---
 
 ## 📊 Performance Metrics
 
-### Real-Time Timing Breakdown (Measured)
+### Real-Time Timing Breakdown (Measured on Hardware)
 
 ```
 ┌──────────────────────────────────────────────────────────────┐
-│ Audio Capture:    26.0 ms  ████████████░░░░░░░░░░░░░░░  34% │
-│ Inference:        47.3 ms  ██████████████████████░░░░░  62% │
-│ Display Update:    3.1 ms  ███░░░░░░░░░░░░░░░░░░░░░░░░   4% │
+│ Audio Capture:    varies   (26ms - 410ms, async)            │
+│ Inference:        55.1 ms  █████████████████░░░░░░░░░  34% │
+│ Display Update:  106.8 ms  ███████████████████████████  66% │
 │ ────────────────────────────────────────────────────────────│
-│ Total Latency:    76.4 ms                                    │
-│ Throughput:       13.1 inferences/second                     │
+│ Total Latency:   162.0 ms  per inference cycle              │
+│ Throughput:        6.2 inferences/second                     │
 └──────────────────────────────────────────────────────────────┘
+
+Performance Summary (from live ESP32):
+• Inference Time:    55.1ms (highly consistent ±0.1ms)
+• Total Cycle:       162.0ms average
+• Throughput:        6.17-6.18 inferences/sec
+• Anomaly Detection: Successfully detected anomalies with 99.6% confidence
 ```
 
 ### Memory Footprint
@@ -210,13 +217,22 @@ idf.py -p /dev/ttyUSB0 flash monitor
 
 **Serial Monitor:**
 ```
-I (5001) FAN_ANOMALY: ─────────────────────────────────────────────────
-I (5002) FAN_ANOMALY: Inference #42 | Result: NORMAL (92.3%)
-I (5003) FAN_ANOMALY:   Audio Capture:  26034 μs ( 26.0 ms)
-I (5004) FAN_ANOMALY:   Inference Time: 47256 μs ( 47.3 ms) ⚡
-I (5005) FAN_ANOMALY:   Display Update:  3142 μs (  3.1 ms)
-I (5006) FAN_ANOMALY:   Total Cycle:    76432 μs ( 76.4 ms)
-I (5007) FAN_ANOMALY:   Throughput:     13.08 inferences/sec
+I (12549) FAN_ANOMALY: ────────────────────────────────────────────────
+I (12549) FAN_ANOMALY: Inference #35 | Result: ANOMALY (99.6%)
+I (12559) FAN_ANOMALY:   Audio Capture:  90781 μs (90.8 ms)
+I (12559) FAN_ANOMALY:   Inference Time: 55112 μs (55.1 ms) ⚡
+I (12569) FAN_ANOMALY:   Display Update: 106851 μs (106.9 ms)
+I (12569) FAN_ANOMALY:   Total Cycle:    162030 μs (162.0 ms)
+I (12579) FAN_ANOMALY:   Throughput:     6.17 inferences/sec
+
+I (12589) FAN_ANOMALY: ╔═══════════════════════════════════════════════════╗
+I (12599) FAN_ANOMALY: ║          10-SECOND PERFORMANCE SUMMARY             ║
+I (12609) FAN_ANOMALY: ╠═══════════════════════════════════════════════════╣
+I (12629) FAN_ANOMALY: ║ Total Inferences:        35                        ║
+I (12629) FAN_ANOMALY: ║ Avg Inference Time:   55.1 ms                     ║
+I (12639) FAN_ANOMALY: ║ Avg Total Latency:    162.0 ms                     ║
+I (12649) FAN_ANOMALY: ║ Throughput:            6.2 inferences/sec         ║
+I (12659) FAN_ANOMALY: ╚═══════════════════════════════════════════════════╝
 ```
 
 **OLED Display:**
@@ -225,10 +241,10 @@ I (5007) FAN_ANOMALY:   Throughput:     13.08 inferences/sec
 │   FAN STATUS        │
 ├─────────────────────┤
 │                     │
-│     NORMAL          │
+│     ANOMALY         │
 │                     │
-│  N:92 A:8           │
-│  47ms               │
+│  N:0  A:100         │
+│  55ms               │
 └─────────────────────┘
 ```
 
@@ -241,7 +257,7 @@ I (5007) FAN_ANOMALY:   Throughput:     13.08 inferences/sec
 #### 1. **Real-Time Systems Design**
 - ✅ Multi-core FreeRTOS task management with priority scheduling
 - ✅ Interrupt-driven I2S DMA for zero-copy audio streaming
-- ✅ Deterministic latency: <80ms end-to-end processing
+- ✅ Deterministic latency: 162ms end-to-end processing (55ms inference + 107ms display)
 - ✅ Race condition prevention with proper mutex/queue handling
 
 #### 2. **Hardware Integration & Driver Development**
@@ -257,9 +273,9 @@ I (5007) FAN_ANOMALY:   Throughput:     13.08 inferences/sec
 - ✅ Stack size tuning for RTOS tasks
 
 #### 4. **Performance Profiling & Optimization**
-- ✅ Microsecond-precision timing using hardware timers
+- ✅ Microsecond-precision timing using hardware timers (esp_timer_get_time())
 - ✅ Per-stage performance breakdown (capture/inference/display)
-- ✅ Throughput monitoring (13+ inferences/sec)
+- ✅ Throughput monitoring (6.2 inferences/sec measured on hardware)
 - ✅ CPU utilization analysis and optimization
 
 ### Machine Learning Engineering Skills
@@ -268,7 +284,7 @@ I (5007) FAN_ANOMALY:   Throughput:     13.08 inferences/sec
 - ✅ TensorFlow Lite Micro integration from scratch
 - ✅ Model quantization (FP32 → INT8, 4x size reduction)
 - ✅ Custom MFCC feature extraction pipeline
-- ✅ Inference optimization with CMSIS-NN acceleration
+- ✅ Custom porting layer for Xtensa architecture (ei_porting_esp32.cpp)
 
 #### 6. **Signal Processing**
 - ✅ Real-time audio preprocessing (pre-emphasis, windowing)
