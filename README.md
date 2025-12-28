@@ -41,8 +41,8 @@ A **production-ready industrial IoT system** that performs real-time anomaly det
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│                         ESP32 (Dual Core)                        │
-│                                                                   │
+│                         ESP32 (Dual Core)                       │
+│                                                                 │
 │  ┌─────────────────────┐         ┌──────────────────────────┐   │
 │  │   Core 1 (Audio)    │         │    Core 0 (Inference)    │   │
 │  │                     │         │                          │   │
@@ -109,11 +109,11 @@ Softmax (2 classes: Normal/Anomaly)
 
 ```
 ┌──────────────────────────────────────────────────────────────┐
-│ Audio Capture:    varies   (26ms - 410ms, async)            │
-│ Inference:        55.1 ms  █████████████████░░░░░░░░░  34% │
-│ Display Update:  106.8 ms  ███████████████████████████  66% │
-│ ────────────────────────────────────────────────────────────│
-│ Total Latency:   162.0 ms  per inference cycle              │
+│ Audio Capture:    varies   (26ms - 410ms, async)             │
+│ Inference:        55.1 ms  █████████████████░░░░░░░░░  34%   │
+│ Display Update:  106.8 ms  ███████████████████████████  66%  │
+│ ────────────────────────────────────────────────────────────-│
+│ Total Latency:   162.0 ms  per inference cycle               │
 │ Throughput:        6.2 inferences/second                     │
 └──────────────────────────────────────────────────────────────┘
 
@@ -226,11 +226,11 @@ I (12569) FAN_ANOMALY:   Total Cycle:    162030 μs (162.0 ms)
 I (12579) FAN_ANOMALY:   Throughput:     6.17 inferences/sec
 
 I (12589) FAN_ANOMALY: ╔═══════════════════════════════════════════════════╗
-I (12599) FAN_ANOMALY: ║          10-SECOND PERFORMANCE SUMMARY             ║
+I (12599) FAN_ANOMALY: ║          10-SECOND PERFORMANCE SUMMARY            ║
 I (12609) FAN_ANOMALY: ╠═══════════════════════════════════════════════════╣
-I (12629) FAN_ANOMALY: ║ Total Inferences:        35                        ║
+I (12629) FAN_ANOMALY: ║ Total Inferences:        35                       ║
 I (12629) FAN_ANOMALY: ║ Avg Inference Time:   55.1 ms                     ║
-I (12639) FAN_ANOMALY: ║ Avg Total Latency:    162.0 ms                     ║
+I (12639) FAN_ANOMALY: ║ Avg Total Latency:    162.0 ms                    ║
 I (12649) FAN_ANOMALY: ║ Throughput:            6.2 inferences/sec         ║
 I (12659) FAN_ANOMALY: ╚═══════════════════════════════════════════════════╝
 ```
@@ -394,12 +394,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - MIMII Dataset creators for the industrial sound data
 - ARM for CMSIS-DSP and CMSIS-NN libraries
 
----
 
-<p align="center">
-  <b>⭐ If this project demonstrates the embedded systems skills you're looking for, please star this repository! ⭐</b>
-</p>
-
-<p align="center">
-  <i>Built with ❤️ for embedded systems and edge ML</i>
-</p>
