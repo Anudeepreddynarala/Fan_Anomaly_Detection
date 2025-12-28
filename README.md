@@ -237,6 +237,9 @@ I (12659) FAN_ANOMALY: ╚══════════════════
 
 **OLED Display:**
 ```
+![IMG_7135](https://github.com/user-attachments/assets/f15e4092-7ea6-441b-af50-738070ebedd1)
+
+
 ┌─────────────────────┐
 │   FAN STATUS        │
 ├─────────────────────┤
