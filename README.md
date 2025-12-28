@@ -375,9 +375,7 @@ This project showcases expertise in:
 
 ## 📝 License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-**Note**: The Edge Impulse SDK and TensorFlow Lite components are subject to their respective licenses.
+The Edge Impulse SDK and TensorFlow Lite components are subject to their respective licenses.
 
 ---
 
