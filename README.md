@@ -1,3 +1,5 @@
+_README content drafted with assistance from Claude_
+
 # 🏭 Real-Time Fan Anomaly Detection on ESP32
 
 [![ESP-IDF](https://img.shields.io/badge/ESP--IDF-v5.5-blue.svg)](https://github.com/espressif/esp-idf)
